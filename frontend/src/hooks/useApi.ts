@@ -14,7 +14,7 @@ export const useApi = () => {
   const getMusic = async ({ title, artist, year }: IQuery): Promise<any> => {
     try {
       const response = await get(
-        `/music?title=${title ?? ''}&artist=${artist ?? ''}&year${year ?? ''}`
+        `/music?title=${title ?? ''}&artist=${artist ?? ''}&year=${year ?? ''}`
       );
       return response.data;
     } catch (error) {
