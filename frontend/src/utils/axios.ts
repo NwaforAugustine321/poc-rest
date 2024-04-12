@@ -2,7 +2,9 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { store } from '@/redux/store';
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+  baseURL:
+    process.env.NEXT_PUBLIC_BASE_URL ??
+    'http://ec2-13-54-44-135.ap-southeast-2.compute.amazonaws.com/api/v1',
 });
 
 api.interceptors.request.use(
