@@ -6,8 +6,9 @@ let options = {
 };
 
 const client = new DynamoDBClient({
+  ...options,
+  region: 'ap-southeast-2',
   credentials: {
-    ...options,
     accessKeyId: process.env.ACESSKEYID!,
     secretAccessKey: process.env.SECRETACCESSKEY!,
   },
