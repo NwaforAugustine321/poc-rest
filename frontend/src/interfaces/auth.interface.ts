@@ -33,3 +33,10 @@ export interface IVerification {
   code: string;
   email: string;
 }
+
+
+export interface IQuery {
+  title: string;
+  artist: string;
+  year: string;
+}

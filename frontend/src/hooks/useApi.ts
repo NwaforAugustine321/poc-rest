@@ -1,3 +1,4 @@
+import { IQuery } from '@/interfaces/auth.interface';
 import { get, post } from '@/utils/axios';
 
 export const useApi = () => {
@@ -10,9 +11,33 @@ export const useApi = () => {
     }
   };
 
-  const getMusic = async (): Promise<any> => {
+  const getMusic = async ({ title, artist, year }: IQuery): Promise<any> => {
     try {
-      const response = await get('/music');
+      const response = await get(
+        `/music?title=${title ?? ''}&artist=${artist ?? ''}&year${year ?? ''}`
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const handleSubscribe = async (musicId: string): Promise<any> => {
+    try {
+      const response = await post(`/music/subscribe`, {
+        musicId,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const handleUnSubscribe = async (musicId: string): Promise<any> => {
+    try {
+      const response = await post(`/music/unsubscribe`, {
+        musicId,
+      });
       return response.data;
     } catch (error) {
       throw error;
@@ -20,6 +45,8 @@ export const useApi = () => {
   };
 
   return {
+    handleSubscribe,
+    handleUnSubscribe,
     getMusic,
     getSubscription,
   };
