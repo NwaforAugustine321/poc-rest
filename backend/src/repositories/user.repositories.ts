@@ -1,7 +1,4 @@
-import {
-  ISignupRequest,
-  ILoginRequest,
-} from '../interfaces/user.interface';
+import { ISignupRequest, ILoginRequest } from '../interfaces/user.interface';
 import { IResponse } from '../interfaces/common.interfaces';
 import { v4 as uuidv4 } from 'uuid';
 import * as utils from '../utils/utils';
@@ -69,6 +66,8 @@ export const login = async (payload: ILoginRequest): Promise<IResponse> => {
       message: 'successfully login',
       data: {
         token,
+        email,
+        name,
       },
     };
   } catch (error) {
