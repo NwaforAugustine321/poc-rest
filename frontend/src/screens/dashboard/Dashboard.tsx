@@ -92,40 +92,46 @@ export default function Dashboard() {
         </div>
 
         <section className='w-[400px] flex flex-col items-center'>
-          {subscribedSongs.map((song: any) => {
-            return (
-              <section key={song?.musicId} className='mb-[3rem]'>
-                <section className='flex gap-[0.5rem] items-center'>
-                  <div>
-                    <h1 className='text-black mb-[1rem]'>
-                      Artist : {song?.artist}
-                    </h1>
-                    <h1 className='text-black mb-[1rem]'>
-                      Title : {song?.title}
-                    </h1>
-                    <h1 className='text-black mb-[1rem]'>
-                      Year : {song?.year}
-                    </h1>
-                  </div>
-                  <Image
-                    className='h-[50px] w-[50px]'
-                    alt='artist-image'
-                    height={10}
-                    width={50}
-                    src={song?.music_url ?? ''}
-                  />
+          {subscribedSongs.length === 0 ? (
+            <div className='text-black'>
+              <h1>No subscription found....</h1>
+            </div>
+          ) : (
+            subscribedSongs.map((song: any) => {
+              return (
+                <section key={song?.musicId} className='mb-[3rem]'>
+                  <section className='flex gap-[0.5rem] items-center'>
+                    <div>
+                      <h1 className='text-black mb-[1rem]'>
+                        Artist : {song?.artist}
+                      </h1>
+                      <h1 className='text-black mb-[1rem]'>
+                        Title : {song?.title}
+                      </h1>
+                      <h1 className='text-black mb-[1rem]'>
+                        Year : {song?.year}
+                      </h1>
+                    </div>
+                    <Image
+                      className='h-[50px] w-[50px]'
+                      alt='artist-image'
+                      height={10}
+                      width={50}
+                      src={song?.music_url ?? ''}
+                    />
+                  </section>
+                  <button
+                    onClick={() => {
+                      unsubscribe(song?.musicId);
+                    }}
+                    className='text-black border-[1px]  border-lime-400 p-[0.4rem] w-[200px]'
+                  >
+                    remove
+                  </button>
                 </section>
-                <button
-                  onClick={() => {
-                    unsubscribe(song?.musicId);
-                  }}
-                  className='text-black border-[1px]  border-lime-400 p-[0.4rem] w-[200px]'
-                >
-                  remove
-                </button>
-              </section>
-            );
-          })}
+              );
+            })
+          )}
         </section>
 
         <div>
