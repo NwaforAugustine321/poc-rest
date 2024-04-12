@@ -165,6 +165,7 @@ export const subscribeToMusic = async (
       message: 'Subscribed successfully',
     };
   } catch (error) {
+    console.log(error);
     throw error;
   }
 };
@@ -233,7 +234,7 @@ export const getUserSubscribedMusic = async (
 
     const subscribedMusic = await Dynamodb.getRecord({
       tableName: 'subscriptions',
-      indexTableName: '',
+      indexTableName: 'userId',
       conditionExpression: condition,
       parameter: parameters,
     });
@@ -244,6 +245,7 @@ export const getUserSubscribedMusic = async (
       data: subscribedMusic,
     };
   } catch (error) {
+    console.log(error);
     throw error;
   }
 };
