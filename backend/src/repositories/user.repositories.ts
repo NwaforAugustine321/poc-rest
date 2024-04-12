@@ -69,6 +69,8 @@ export const login = async (payload: ILoginRequest): Promise<IResponse> => {
       message: 'successfully login',
       data: {
         token,
+        email,
+        name
       },
     };
   } catch (error) {
