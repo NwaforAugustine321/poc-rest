@@ -4,6 +4,7 @@ import axios from 'axios';
 import path from 'path';
 
 const s3 = new S3Client({
+  region: 'ap-southeast-2',
   credentials: {
     accessKeyId: process.env.ACESSKEYID!,
     secretAccessKey: process.env.SECRETACCESSKEY!,
