@@ -5,7 +5,15 @@ import { DataBaseError, RequestError } from '../utils/errors';
 
 export const getAllMusic = async (req: Request, res: Response) => {
   try {
-    const response = await requestRepo.getAllMusic();
+    const { title, artist, year } = req.query;
+
+    console.log(req.query);
+
+    const response = await requestRepo.getAllMusic({
+      title: title ?? '',
+      artist: artist ?? '',
+      year: year ?? '',
+    });
 
     return res.status(200).json(apiUtils.buildSuccessResponse(response));
   } catch (error) {

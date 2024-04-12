@@ -119,6 +119,7 @@ export const signup = async (payload: ISignupRequest): Promise<IResponse> => {
       data: {},
     };
   } catch (error) {
+    console.log(error);
     throw error;
   }
 };

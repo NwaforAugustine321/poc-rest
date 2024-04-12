@@ -29,7 +29,7 @@ export class Dynamodb {
     selectedAttribute,
     limit,
     exclusiveStartKey,
-  }: IGetRecordWithFilter): Promise<ScanCommandOutput> {
+  }: IGetRecordWithFilter): Promise<Record<string, any>[]> {
     try {
       let params: any = {
         TableName: tableName,
@@ -64,7 +64,8 @@ export class Dynamodb {
       }
 
       const response = await dynamodb.send(new ScanCommand(params));
-      return response;
+      console.log(response);
+      return response.Items ?? [];
     } catch (error) {
       throw new DataBaseError({
         message: 'Query error',
@@ -197,7 +198,7 @@ export class Dynamodb {
       };
 
       const response = await dynamodb.send(new ScanCommand(params));
-      return response.Items ?? []
+      return response.Items ?? [];
     } catch (error) {
       throw new DataBaseError({
         message: 'Query error',

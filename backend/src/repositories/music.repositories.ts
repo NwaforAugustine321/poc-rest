@@ -1,6 +1,10 @@
 import { IResponse } from '../interfaces/common.interfaces';
 import { v4 as uuidv4 } from 'uuid';
-import { ICreateMusic, ISubscribeToMusic } from '../interfaces/music.interface';
+import {
+  ICreateMusic,
+  IGetMusic,
+  ISubscribeToMusic,
+} from '../interfaces/music.interface';
 import { RequestError } from '../utils/errors';
 import axios from 'axios';
 import path from 'path';
@@ -35,7 +39,7 @@ export const createMusic = async (
     const imageUpload = new Upload({
       client: s3,
       params: {
-        Bucket: 'tappingbucket',
+        Bucket: 'tapperbucket',
         Body: streamBuffer,
         ACL: ObjectCannedACL.public_read,
         Key: `${userId}/${uuidv4()}-image${imageExtension}`,
@@ -93,10 +97,10 @@ export const unsubscribeToMusic = async (
 
     await Dynamodb.deleteRecord({
       tableName: 'subscriptions',
-      condition:{
-        musicId
-      }
-    })
+      condition: {
+        musicId,
+      },
+    });
 
     return {
       code: 200,
@@ -126,15 +130,12 @@ export const subscribeToMusic = async (
       parameter: parameters,
     });
 
-     
-
-     const music = await Dynamodb.getRecord({
-       tableName: 'music',
-       indexTableName: 'musicId',
-       conditionExpression: condition,
-       parameter: parameters,
-     });
-
+    const music = await Dynamodb.getRecord({
+      tableName: 'music',
+      indexTableName: 'musicId',
+      conditionExpression: condition,
+      parameter: parameters,
+    });
 
     if (alreadyExist.length > 0) {
       throw new RequestError({
@@ -163,28 +164,67 @@ export const subscribeToMusic = async (
       message: 'Subscribed successfully',
     };
   } catch (error) {
-    
     throw error;
   }
 };
 
-export const getAllMusic = async (): Promise<IResponse> => {
+export const getAllMusic = async (payload: IGetMusic): Promise<IResponse> => {
   try {
-    const all_music = await Dynamodb.getAllRecord('music')
+    const { title, artist, year } = payload;
+
+    let filterExpression = '';
+
+    const params: any = {
+      TableName: 'music',
+      ExpressionAttributeNames: {},
+      ExpressionAttributeValues: {},
+    };
+
+    if (title) {
+      params.ExpressionAttributeValues[':title'] = title;
+      filterExpression += 'title = :title';
+    }
+
+    if (artist) {
+      if (filterExpression) {
+        filterExpression += ' AND ';
+      }
+
+      params.ExpressionAttributeValues[':artist'] = artist;
+      filterExpression += 'artist = :artist';
+    }
+
+    if (year) {
+      if (filterExpression) {
+        filterExpression += ' AND ';
+      }
+
+      params.ExpressionAttributeValues[':year'] = year;
+      filterExpression += 'year = :year';
+    }
+
+    params.FilterExpression = filterExpression;
+
+    const all_music = await Dynamodb.getRecordWithFilter({
+      tableName: params.TableName,
+      filter: params.FilterExpression,
+      parameter: params.ExpressionAttributeValues,
+    });
 
     return {
       code: 200,
       message: 'All posted music',
-      data: all_music
+      data: all_music,
     };
   } catch (error) {
     throw error;
   }
 };
 
-export const getUserSubscribedMusic = async (userId:string): Promise<IResponse> => {
+export const getUserSubscribedMusic = async (
+  userId: string
+): Promise<IResponse> => {
   try {
-    
     const condition = 'userId = :param';
     const parameters = {
       ':param': userId,
@@ -206,4 +246,3 @@ export const getUserSubscribedMusic = async (userId:string): Promise<IResponse> 
     throw error;
   }
 };
-

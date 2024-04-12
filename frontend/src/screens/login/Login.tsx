@@ -29,9 +29,11 @@ export default function Login() {
   const loginUser = async () => {
     try {
       await login(payload);
-      router.push('/dashboard');
-    } catch (error) {
-      console.log(error);
+      router.push('/');
+    } catch (error: any) {
+      if (error.status && error.status === 'ERROR') {
+        alert(error?.errors?.message);
+      }
     }
   };
 
@@ -41,13 +43,13 @@ export default function Login() {
         onChange={handleInputChange}
         name='email'
         placeholder='email'
-        className='w-[400px] block mb-[1rem] border-[1px]  border-lime-400'
+        className='w-[400px] text-black block mb-[1rem] border-[1px]  border-lime-400'
       />
       <input
         onChange={handleInputChange}
         name='password'
         placeholder='password'
-        className='w-[400px] block mb-[1rem] border-[1px]  border-lime-400'
+        className='w-[400px] text-black  block mb-[1rem] border-[1px]  border-lime-400'
       />
       <button className='text-black' onClick={loginUser}>
         login

@@ -13,4 +13,10 @@ export interface ISubscribeToMusic {
   musicId:string
 }
 
+export interface IGetMusic {
+  title: string | any;
+  artist: string | any;
+  year: string | any;
+}
+
 

@@ -2,11 +2,15 @@ export interface AuthState {
   isAuthenticated: boolean;
   token: string | null;
   selectedRole: string;
+  name: string;
+  email: string;
 }
 
 export interface IReduxLogin {
   token: string;
   isAuthenticated: boolean;
+  name: string;
+  email: string;
 }
 
 export interface IReduxSelectedRole {

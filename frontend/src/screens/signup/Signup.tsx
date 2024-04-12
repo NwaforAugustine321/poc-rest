@@ -31,13 +31,11 @@ export default function Signup() {
 
   const register = async () => {
     try {
-      const response = await signup(payload);
-      router.push(`verify-account?account=${response?.data?.email}`);
+      await signup(payload);
+      router.push(`/login`);
     } catch (error: any) {
-      if (error?.code === 400 && error.message === 'Verification required') {
-        router.push(`verify-account?account=${error?.data?.email}`);
-      } else {
-        //do something else
+      if (error.status && error.status === 'ERROR') {
+        alert(error?.errors?.message ?? error?.errors[0]);
       }
     }
   };
@@ -49,19 +47,19 @@ export default function Signup() {
         onChange={handleInputChange}
         name='name'
         placeholder='username'
-        className='w-[400px] block mb-[1rem] border-[1px]  border-lime-400 text-black'
+        className='w-[400px] text-black block mb-[1rem] border-[1px]  border-lime-400 text-black'
       />
       <input
         onChange={handleInputChange}
         name='email'
         placeholder='email'
-        className='w-[400px] block mb-[1rem] border-[1px]  border-lime-400 text-black'
+        className='w-[400px] text-black block mb-[1rem] border-[1px]  border-lime-400 text-black'
       />
       <input
         onChange={handleInputChange}
         name='password'
         placeholder='password'
-        className='w-[400px] block mb-[1rem] border-[1px]  border-lime-400 text-black'
+        className='w-[400px] text-black block mb-[1rem] border-[1px]  border-lime-400 text-black'
       />
       <button className='text-black' onClick={register}>
         Sign up

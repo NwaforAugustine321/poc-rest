@@ -71,11 +71,11 @@ export interface IGetRecordWithFilter {
   tableName: string;
   filter: string;
   parameter: { [key: string]: any };
-  expressionAttributeNames: string | { [key: string]: any };
-  indexTableName: string;
-  selectedAttribute: string;
-  limit: number;
-  exclusiveStartKey: { [key: string]: string };
+  expressionAttributeNames?: string | { [key: string]: any };
+  indexTableName?: string | string[];
+  selectedAttribute?: string;
+  limit?: number;
+  exclusiveStartKey?: { [key: string]: string };
 }
 
 export interface IGetRecord {

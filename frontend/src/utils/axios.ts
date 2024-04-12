@@ -9,7 +9,7 @@ api.interceptors.request.use(
   (config: AxiosRequestConfig): AxiosRequestConfig => {
     const { token } = store.getState().auth;
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `${token}`;
     }
     return config;
   },

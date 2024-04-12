@@ -1,89 +1,95 @@
 'use client';
 
-import { EVENTS } from '@/constant';
+import { useAppSelector } from '@/hooks/storeshooks';
+import { useApi } from '@/hooks/useApi';
 import { useAuth } from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
+import { AuthState } from '@/interfaces/auth.interface';
+import { RootState } from '@/redux/store';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import MenteeRequest from './mentor/MenteeRequest';
-import { useSocket } from '@/context/socket.context';
-import GeneralChatbox from '@/shared/chats/GeneralChatbox';
-import IndividualChatbox from '@/shared/chats/IndividualChatbox';
-
-interface Profile {
-  id: number;
-  name: string;
-}
 
 export default function Dashboard() {
-  const router = useRouter();
-  const [request, setRequest] = useState<any[]>([]);
-  const { onEvent, isSocketConnected } = useSocket();
-  const [individualChats, setIndividualChats] = useState<Profile[]>([]);
-  const [profiles, setProfiles] = useState<Profile[]>([
-    { id: 1, name: 'John' },
-    { id: 2, name: 'Alice' },
-    { id: 3, name: 'Bob' },
-  ]);
-
-  const handleProfileClick = (profileId: number) => {
-    const profile = profiles.find((profile) => profile.id === profileId);
-    if (profile && !individualChats.find((chat) => chat.id === profileId)) {
-      setIndividualChats([...individualChats, profile]);
-    }
-  };
-
-  const handleCloseIndividualChat = (id: number) => {
-    setIndividualChats(individualChats.filter((profile) => profile.id !== id));
-  };
-
-  const handleCloseGeneralChat = () => {
-    // Close the general chat
-  };
-
   const { logout } = useAuth();
+  const { getMusic, getSubscription } = useApi();
+  const [songs, setSongs] = useState([]);
+  const [subscribedSongs, setSubscribedSongs] = useState([]);
+  const { name } = useAppSelector((state: RootState): AuthState => state.auth);
 
-  const handleLogout = () => {
+  const handleGetMusic = async () => {
     try {
-      logout();
-      router.push('/login');
+      const res = await getMusic();
+      setSongs(res);
     } catch (error) {
-      console.log(error);
+      setSongs([]);
     }
   };
 
-  const onRefresh = async () => {};
+  const handleSubscribedMusic = async () => {
+    try {
+      const res = await getSubscription();
+      setSubscribedSongs(res);
+    } catch (error) {
+      setSubscribedSongs([]);
+    }
+  };
 
-  useEffect(() => {
-    onEvent({
-      event: EVENTS.REQUEST_DATA,
-      handler: (response: any[]): void => {
-        console.log(response);
-        setRequest(response);
-      },
-    });
-  }, [isSocketConnected]);
+   useEffect(() => {
+     handleGetMusic();
+   }, []);
 
-  return (
-    <main className='w-full flex justify-center flex-col items-center h-full'>
-      <h1 className='text-black'>Dashboard</h1>
-      <MenteeRequest requests={request} onRefresh={onRefresh} />
-      <button onClick={handleLogout} className='text-black'>
-        logout
-      </button>
-      <GeneralChatbox
-        profiles={profiles}
-        onProfileClick={handleProfileClick}
-        onClose={handleCloseGeneralChat}
-      />
-      {individualChats.map((profile, index) => (
-        <IndividualChatbox
-          key={profile.id}
-          id={profile.id}
-          messages={[profile.name]}
-          onClose={() => handleCloseIndividualChat(profile.id)}
-          position={index + 1} // Pass the position to the IndividualChatbox component
-        />
-      ))}
-    </main>
-  );
+   return (
+     <main className='w-full flex justify-center flex-col items-center h-full'>
+       <h1 className='text-black mb-[1rem]'>Dashboard</h1>
+       <section className='w-full flex justify-center flex-row gap-[2rem]'>
+         <div>
+           <h1 className='text-black mb-[1rem]'>User</h1>
+           <h1 className='text-black mb-[1rem]'>{name}</h1>
+           <button
+             onClick={logout}
+             className='text-black border-[1px]  border-lime-400 p-[1rem]'
+           >
+             Log out
+           </button>
+         </div>
+         <div>
+           <h1 className='text-black mb-[1rem]'>Songs</h1>
+           {songs.map((song: any) => {
+             return (
+               <section className='mb-[3rem]'>
+                 <section className='flex gap-[0.5rem] items-center'>
+                   <div>
+                     <h1 className='text-black mb-[1rem]'>
+                       Artist : {song?.artist}
+                     </h1>
+                     <h1 className='text-black mb-[1rem]'>
+                       Title : {song?.title}
+                     </h1>
+                     <h1 className='text-black mb-[1rem]'>
+                       Year : {song?.year}
+                     </h1>
+                   </div>
+                   <Image
+                     className='h-[50px] w-[50px]'
+                     alt='artist-image'
+                     height={10}
+                     width={50}
+                     src={song?.music_url ?? ''}
+                   />
+                 </section>
+                 <button
+                   onClick={logout}
+                   className='text-black border-[1px]  border-lime-400 p-[0.4rem] w-[200px]'
+                 >
+                   subscribe
+                 </button>
+               </section>
+             );
+           })}
+         </div>
+         <div>
+           <h1 className='text-black mb-[1rem]'>Query</h1>
+         </div>
+       </section>
+     </main>
+   );
 }

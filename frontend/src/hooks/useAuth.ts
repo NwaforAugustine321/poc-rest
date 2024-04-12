@@ -1,11 +1,6 @@
 import { useDispatch } from 'react-redux';
 import { post } from '@/utils/axios';
-import {
-  AuthState,
-  ILogin,
-  ISignup,
-  IVerification,
-} from '@/interfaces/auth.interface';
+import { AuthState, ILogin, ISignup } from '@/interfaces/auth.interface';
 import { setSelectedRole, login, logout } from '@/redux/reducers/auth.reducer';
 import { useAppSelector } from './storeshooks';
 import { RootState } from '@/redux/store';
@@ -19,11 +14,13 @@ export const useAuth = () => {
   const loginAccount = async (payload: ILogin): Promise<void> => {
     try {
       const response = await post('/users/login', payload);
-      const { token } = response.data;
+      const { token, name, email } = response.data;
       dispatch(
         login({
           isAuthenticated: true,
           token,
+          name,
+          email,
         })
       );
     } catch (error) {
@@ -34,14 +31,6 @@ export const useAuth = () => {
   const signup = async (payload: ISignup): Promise<any> => {
     try {
       return await post('/users/signup', payload);
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  const verify = async (payload: IVerification): Promise<any> => {
-    try {
-      return await post('/users/verify', payload);
     } catch (error) {
       throw error;
     }
@@ -75,7 +64,6 @@ export const useAuth = () => {
       selectedRole,
       token,
     },
-    verify,
     login: loginAccount,
     logout: logoutAccount,
     signup,

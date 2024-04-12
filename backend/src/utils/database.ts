@@ -1,13 +1,15 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocumentClient } from '@aws-sdk/lib-dynamodb';
+import 'dotenv/config';
 
 let options = {
   convertEmptyValues: true,
 };
 
 const client = new DynamoDBClient({
+  ...options,
+  region: 'ap-southeast-2',
   credentials: {
-    ...options,
     accessKeyId: process.env.ACESSKEYID!,
     secretAccessKey: process.env.SECRETACCESSKEY!,
   },
