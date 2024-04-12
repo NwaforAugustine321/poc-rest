@@ -213,12 +213,23 @@ export const getAllMusic = async (payload: IGetMusic): Promise<IResponse> => {
 
     params.FilterExpression = filterExpression;
 
-    const all_music = await Dynamodb.getRecordWithFilter({
-      tableName: params.TableName,
-      filter: params.FilterExpression,
-      parameter: params.ExpressionAttributeValues,
-      expressionAttributeNames: params.ExpressionAttributeNames,
-    });
+    let all_music = [];
+
+    if (Object.keys(params.ExpressionAttributeNames).length === 0) {
+      all_music = await Dynamodb.getRecordWithFilter({
+        tableName: params.TableName,
+        filter: params.FilterExpression,
+        parameter: params.ExpressionAttributeValues,
+      });
+    } else {
+      all_music = await Dynamodb.getRecordWithFilter({
+        tableName: params.TableName,
+        filter: params.FilterExpression,
+        parameter: params.ExpressionAttributeValues,
+        expressionAttributeNames: params.ExpressionAttributeNames,
+      });
+    }
+      
 
     return {
       code: 200,
@@ -226,6 +237,7 @@ export const getAllMusic = async (payload: IGetMusic): Promise<IResponse> => {
       data: all_music,
     };
   } catch (error) {
+    console.log(error);
     throw error;
   }
 };

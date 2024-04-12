@@ -64,7 +64,7 @@ export class Dynamodb {
       }
 
       const response = await dynamodb.send(new ScanCommand(params));
-
+console.log(response);
       return response.Items ?? [];
     } catch (error) {
       throw new DataBaseError({
