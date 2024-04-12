@@ -3,4 +3,4 @@
 /frontend/node_modules
 *.next
 /sst-project
-.env
+
