@@ -35,7 +35,7 @@ export const createMusic = async (
     const imageUpload = new Upload({
       client: s3,
       params: {
-        Bucket: 'tappingbucket',
+        Bucket: 'tapperbucket',
         Body: streamBuffer,
         ACL: ObjectCannedACL.public_read,
         Key: `${userId}/${uuidv4()}-image${imageExtension}`,
