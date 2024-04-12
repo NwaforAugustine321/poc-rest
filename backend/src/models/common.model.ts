@@ -162,6 +162,7 @@ export class Dynamodb {
         params['ProjectionExpression'] = selectAttributes;
       }
       const response = await dynamodb.send(new QueryCommand(params));
+
       return response.Items ?? [];
     } catch (error) {
       throw new DataBaseError({

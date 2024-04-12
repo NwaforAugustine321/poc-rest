@@ -201,9 +201,15 @@ export const getAllMusic = async (payload: IGetMusic): Promise<IResponse> => {
         filterExpression += ' AND ';
       }
 
-      params.ExpressionAttributeValues[':year'] = year;
-      filterExpression += 'year = :year';
+      params.ExpressionAttributeNames = {
+        '#year': 'year',
+      };
+
+      params.ExpressionAttributeValues[':releaseYear'] = year;
+      filterExpression += '#year = :releaseYear';
     }
+
+    console.log(params);
 
     params.FilterExpression = filterExpression;
 
@@ -211,6 +217,7 @@ export const getAllMusic = async (payload: IGetMusic): Promise<IResponse> => {
       tableName: params.TableName,
       filter: params.FilterExpression,
       parameter: params.ExpressionAttributeValues,
+      expressionAttributeNames: params.ExpressionAttributeNames,
     });
 
     return {
