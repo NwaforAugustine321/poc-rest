@@ -82,6 +82,7 @@ export class Dynamodb {
       const params = {
         TableName: tableName,
         Item: data,
+        ConditionExpression: 'attribute_not_exists(musicId)',
       };
       const command = new PutCommand(params);
 
