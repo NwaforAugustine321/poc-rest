@@ -82,12 +82,12 @@ export class Dynamodb {
       const params = {
         TableName: tableName,
         Item: data,
-        ConditionExpression: 'attribute_not_exists(musicId)',
       };
       const command = new PutCommand(params);
 
       await dynamodb.send(command);
     } catch (error: any) {
+      console.log(error);
       throw new DataBaseError({
         message: 'Query error',
         stack: error,

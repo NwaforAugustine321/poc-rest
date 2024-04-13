@@ -96,17 +96,19 @@ export const unsubscribeToMusic = async (
       });
     }
 
+    const { subId } = alreadyExist[0];
+
     const deleteCondition = {
-      musicId,
+      subId,
     };
 
     await Dynamodb.deleteRecord({
       tableName: 'subscriptions',
       condition: deleteCondition,
-      expressionCondition: `userId = :userId AND musicId = :musicId`,
+      expressionCondition: `userId = :userId AND subId = :subId`,
       parameter: {
         ':userId': userId,
-        ':musicId': musicId,
+        ':subId': subId,
       },
     });
 
@@ -166,6 +168,7 @@ export const subscribeToMusic = async (
     await Dynamodb.insert({
       tableName: 'subscriptions',
       data: {
+        subId: uuidv4(),
         userId,
         musicId,
         title,
