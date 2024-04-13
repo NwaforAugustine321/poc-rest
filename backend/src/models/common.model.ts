@@ -64,9 +64,10 @@ export class Dynamodb {
       }
 
       const response = await dynamodb.send(new ScanCommand(params));
-
+     console.log(response);
       return response.Items ?? [];
     } catch (error) {
+      console.log(error);
       throw new DataBaseError({
         message: 'Query error',
         stack: error,

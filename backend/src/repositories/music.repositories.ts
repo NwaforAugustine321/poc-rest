@@ -224,7 +224,7 @@ export const getAllMusic = async (payload: IGetMusic): Promise<IResponse> => {
         '#year': 'year',
       };
 
-      params.ExpressionAttributeValues[':releaseYear'] = year;
+      params.ExpressionAttributeValues[':releaseYear'] = parseInt(year);
       filterExpression += '#year = :releaseYear';
     }
 
