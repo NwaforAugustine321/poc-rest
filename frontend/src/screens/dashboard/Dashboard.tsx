@@ -22,10 +22,11 @@ export default function Dashboard() {
   const { name } = useAppSelector((state: RootState): AuthState => state.auth);
 
   const subscribe = async (id: string) => {
-    await handleSubscribe(id);
-    await handleSubscribedMusic();
     try {
+      await handleSubscribe(id);
+      await handleSubscribedMusic();
     } catch (error: any) {
+      console.log(error);
       if (error.status && error.status === 'ERROR') {
         alert(error?.errors?.message);
       }
@@ -33,9 +34,9 @@ export default function Dashboard() {
   };
 
   const unsubscribe = async (id: string) => {
-    await handleUnSubscribe(id);
-    await handleSubscribedMusic();
     try {
+      await handleUnSubscribe(id);
+      await handleSubscribedMusic();
     } catch (error: any) {
       if (error.status && error.status === 'ERROR') {
         alert(error?.errors?.message);
