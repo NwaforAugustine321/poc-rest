@@ -119,15 +119,22 @@ export const subscribeToMusic = async (
   try {
     const { musicId, userId } = payload;
 
-    const condition = 'musicId = :param';
+    const condition = 'musicId = :param AND userId = :userId';
     const parameters = {
       ':param': musicId,
+      ':userId': userId,
     };
 
-    const alreadyExist = await Dynamodb.getRecord({
+    // const alreadyExist = await Dynamodb.getRecord({
+    //   tableName: 'subscriptions',
+    //   indexTableName: 'musicId',
+    //   conditionExpression: condition,
+    //   parameter: parameters,
+    // });
+
+    const alreadyExist = await Dynamodb.getRecordWithFilter({
       tableName: 'subscriptions',
-      indexTableName: 'musicId',
-      conditionExpression: condition,
+      filter: condition,
       parameter: parameters,
     });
 
