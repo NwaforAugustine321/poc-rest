@@ -103,9 +103,10 @@ export const unsubscribeToMusic = async (
     await Dynamodb.deleteRecord({
       tableName: 'subscriptions',
       condition: deleteCondition,
-      expressionCondition: `userId = :userId`,
+      expressionCondition: `userId = :userId AND musicId = :musicId`,
       parameter: {
         ':userId': userId,
+        ':musicId': musicId,
       },
     });
 
