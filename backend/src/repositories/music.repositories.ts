@@ -75,17 +75,17 @@ export const unsubscribeToMusic = async (
   payload: ISubscribeToMusic
 ): Promise<IResponse> => {
   try {
-    const { musicId } = payload;
+    const { musicId, userId } = payload;
 
-    const condition = 'musicId = :param';
+    const condition = 'musicId = :param AND userId = :userId';
     const parameters = {
       ':param': musicId,
+      ':userId': userId,
     };
 
-    const alreadyExist = await Dynamodb.getRecord({
+    const alreadyExist = await Dynamodb.getRecordWithFilter({
       tableName: 'subscriptions',
-      indexTableName: 'musicId',
-      conditionExpression: condition,
+      filter: condition,
       parameter: parameters,
     });
 
@@ -96,10 +96,16 @@ export const unsubscribeToMusic = async (
       });
     }
 
+    const deleteCondition = {
+      musicId,
+    };
+
     await Dynamodb.deleteRecord({
       tableName: 'subscriptions',
-      condition: {
-        musicId,
+      condition: deleteCondition,
+      expressionCondition: `userId = :userId`,
+      parameter: {
+        ':userId': userId,
       },
     });
 
@@ -141,8 +147,10 @@ export const subscribeToMusic = async (
     const music = await Dynamodb.getRecord({
       tableName: 'music',
       indexTableName: 'musicId',
-      conditionExpression: condition,
-      parameter: parameters,
+      conditionExpression: 'musicId = :param',
+      parameter: {
+        ':param': musicId,
+      },
     });
 
     if (alreadyExist.length > 0) {

@@ -106,4 +106,6 @@ export interface IUpdate {
 export interface IDelete {
   tableName: string;
   condition: { [key: string]: any };
+  expressionCondition?: string;
+  parameter?: { [key: string]: any };
 }

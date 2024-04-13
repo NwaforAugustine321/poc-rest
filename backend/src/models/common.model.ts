@@ -64,7 +64,7 @@ export class Dynamodb {
       }
 
       const response = await dynamodb.send(new ScanCommand(params));
-console.log(response);
+
       return response.Items ?? [];
     } catch (error) {
       throw new DataBaseError({
@@ -175,12 +175,22 @@ console.log(response);
   static async deleteRecord({
     condition,
     tableName,
+    expressionCondition,
+    parameter,
   }: IDelete): Promise<DeleteCommandOutput> {
     try {
-      let params = {
+      let params: any = {
         Key: condition,
         TableName: tableName,
       };
+
+      if (expressionCondition) {
+        params['ConditionExpression'] = expressionCondition;
+      }
+
+      if (parameter) {
+        params['ExpressionAttributeValues'] = parameter;
+      }
 
       const response = await dynamodb.send(new DeleteCommand(params));
 
